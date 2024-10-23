@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config({
+await dotenv.config({
   path:'.env'
 });
 
@@ -20,7 +20,7 @@ import shopReviewRouter from "./routes/shop/review-routes.js";
 import commonFeatureRouter from "./routes/common/feature-routes.js";
 
 
-mongoose
+await mongoose
   .connect(
     process.env.MONGO_URI
   )
@@ -31,8 +31,6 @@ mongoose
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-console.log(process.env)
 
 app.use(
   cors({
