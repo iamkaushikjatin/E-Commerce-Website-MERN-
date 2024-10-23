@@ -54,23 +54,36 @@ const loginUser = async (req, res) => {
         id: checkUser._id,
         email: checkUser.email,
         role: checkUser.role,
-        userName: checkUser.userName
+        userName: checkUser.userName,
       },
       process.env.AUTH_TOKEN_SECRET_KEY,
       { expiresIn: "60m" }
     );
 
-    
-    
+    // I am commenting out this part because at the time of deployement you need to have a domain to store cookies otherwise the token gets deleted everytime we refresh our page
+    //
+    //
+    //
+    // res.cookie("token", token, { httpOnly: true, secure: true }).json({
+    //   success: true,
+    //   message: "You have logged in successfully",
+    //   user: {
+    //     email: checkUser.email,
+    //     role: checkUser.role,
+    //     id: checkUser._id,
+    //     userName: checkUser.userName
+    //   },
+    // });
 
-    res.cookie("token", token, { httpOnly: true, secure: true }).json({
+    res.status(200).json({
       success: true,
-      message: "You have logged in successfully",
+      message: "Logged in successfuly",
+      token,
       user: {
         email: checkUser.email,
         role: checkUser.role,
         id: checkUser._id,
-        userName: checkUser.userName
+        userName: checkUser.userName,
       },
     });
   } catch (e) {
@@ -94,7 +107,8 @@ const logoutUser = (req, res) => {
 // authentication middleware
 
 const authMiddleware = async (req, res, next) => {
-  const token = req.cookies.token;
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
   if (!token)
     return res.status(401).json({
       success: false,
@@ -113,5 +127,23 @@ const authMiddleware = async (req, res, next) => {
 };
 
 
+// const authMiddleware = async (req, res, next) => {
+//   const token = req.cookies.token;
+//   if (!token)
+//     return res.status(401).json({
+//       success: false,
+//       message: "You cannot access this page",
+//     });
+//   try {
+//     const decoded = jwt.verify(token, process.env.AUTH_TOKEN_SECRET_KEY);
+//     req.user = decoded;
+//     next();
+//   } catch (error) {
+//     res.status(401).json({
+//       success: false,
+//       message: "You cannot access this page",
+//     });
+//   }
+// };
 
 export { registerUser, loginUser, logoutUser, authMiddleware };

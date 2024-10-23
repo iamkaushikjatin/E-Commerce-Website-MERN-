@@ -22,7 +22,7 @@ import {
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { CiUser } from "react-icons/ci";
 import { IoIosLogOut } from "react-icons/io";
-import { logoutUser } from "@/store/auth/authSlice";
+import { logoutUser, resetTokenAndCredentials } from "@/store/auth/authSlice";
 import UserCartWrapper from "./cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cartSlice";
 import { Label } from "../ui/label";
@@ -73,7 +73,10 @@ function HeaderRightContent() {
   const dispatch = useDispatch();
 
   function handleLogout() {
-    dispatch(logoutUser());
+    // dispatch(logoutUser());
+    dispatch(resetTokenAndCredentials());
+    sessionStorage.clear();
+    navigate('/auth/login');
   }
 
   useEffect(() => {
