@@ -101,7 +101,7 @@ const authMiddleware = async (req, res, next) => {
       message: "You cannot access this page",
     });
   try {
-    const decoded = jwt.verify(token, "USER_SECRET_KEY");
+    const decoded = jwt.verify(token, process.env.AUTH_TOKEN_SECRET_KEY);
     req.user = decoded;
     next();
   } catch (error) {
