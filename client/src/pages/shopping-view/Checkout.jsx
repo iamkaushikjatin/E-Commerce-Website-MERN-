@@ -16,7 +16,6 @@ function ShopCheckout() {
   const [isPaymentStart, setIsPaymentStart] = useState(false);
   const { toast } = useToast();
 
-  console.log(cartItems.items, "cartItems");
 
   const totalCartAmount =
     cartItems && cartItems.items && cartItems.items.length > 0

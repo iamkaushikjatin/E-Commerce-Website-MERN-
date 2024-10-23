@@ -3,7 +3,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { FiLogOut } from "react-icons/fi";
 import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
-import { logoutUser } from "@/store/auth/authSlice";
+import { logoutUser, resetTokenAndCredentials } from "@/store/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
 function AdminHeader({ setOpen }) {
