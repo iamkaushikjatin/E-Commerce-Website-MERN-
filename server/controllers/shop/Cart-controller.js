@@ -1,5 +1,6 @@
 import Cart from "../../models/Cart.js";
 import Product from "../../models/Product.js";
+import mongoose from "mongoose";
 
 const addToCart = async (req, res) => {
   try {
@@ -59,8 +60,13 @@ const fetchCartItems = async (req, res) => {
     if (!userId) {
       return res.status(400).json({
         success: false,
-        message: "User Id is mandatory!!",
+        message: "User ID is mandatory!",
       });
+    }
+
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ success: false, message: "Invalid User ID" });
     }
 
     const cart = await Cart.findOne({ userId }).populate({
@@ -75,7 +81,8 @@ const fetchCartItems = async (req, res) => {
       });
     }
 
-    const validItems = cart.items.filter((productItem) => productItem);
+
+    const validItems = cart.items.filter((item) => item.productId);
 
     if (validItems.length < cart.items.length) {
       cart.items = validItems;
@@ -99,13 +106,15 @@ const fetchCartItems = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error during fetchCartItems:", error);
     res.status(500).json({
       success: false,
-      message: "Error",
+      message: "Error fetching cart items",
+      error,
     });
   }
 };
+
 
 const updateCartItemQuantity = async (req, res) => {
   try {
