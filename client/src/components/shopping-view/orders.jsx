@@ -18,7 +18,6 @@ import {
   resetOrderDetails,
 } from "@/store/shop/orderSlice";
 import { Badge } from "../ui/badge";
-import { Progress } from "../ui/progress";
 
 function ShoppingOrders() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
