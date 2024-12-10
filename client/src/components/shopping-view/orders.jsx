@@ -18,6 +18,7 @@ import {
   resetOrderDetails,
 } from "@/store/shop/orderSlice";
 import { Badge } from "../ui/badge";
+import { Progress } from "../ui/progress";
 
 function ShoppingOrders() {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
@@ -36,6 +37,26 @@ function ShoppingOrders() {
   useEffect(() => {
     if (orderDetails !== null) setOpenDetailsDialog(true);
   }, [orderDetails]);
+
+  const calculateProgress = (status) => {
+    switch(status){
+      case "confirmed":
+        return 25;
+      case "inProcess":
+        return 50;
+      case "inShipping":
+        return 75;
+      case "delieverd":
+        return 100;
+      default:
+        return 0;
+    }
+  }
+  
+  const getProgressGradient = (value) => {
+    const progress = Math.min(Math.max(value, 0), 100);
+    return `bg-gradient-to-r from-green-300 to-green-600`;  // Tailwind gradient from light green to dark green
+  };
 
 
   return (
@@ -63,19 +84,20 @@ function ShoppingOrders() {
                     <TableCell>{orderItem?._id}</TableCell>
                     <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                     <TableCell>
-                      <Badge
-                        className={`py-1 px-3 ${
-                          orderItem?.orderStatus === "confirmed"
-                            ? "bg-green-500"
-                            : orderItem?.orderStatus === "delieverd"
-                            ? "bg-green-500"
-                            : orderItem?.orderStatus === "rejected"
-                            ? "bg-red-500"
-                            : "bg-black"
-                        }`}
-                      >
-                        {orderItem?.orderStatus}
-                      </Badge>
+                    {orderItem?.orderStatus === "rejected" ? (
+                        <Badge className="py-1 px-3 bg-red-500 text-white">
+                          Rejected
+                        </Badge>
+                      ) : (
+                        <div className="w-1/2 h-2 bg-white rounded-full border border-gray-300">
+                          <div
+                            className={`h-full rounded-full ${getProgressGradient(
+                              calculateProgress(orderItem?.orderStatus)
+                            )}`}
+                            style={{ width: `${calculateProgress(orderItem?.orderStatus)}%` }}
+                          />
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>${orderItem?.totalAmount}</TableCell>
                     <TableCell>
